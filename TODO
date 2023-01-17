@@ -1,0 +1,12 @@
+FRONTEND-DEVELOPMENT 1:
+    ✔ Migrate from jsx to tsx @done(23-01-17 10:48)
+    ✔ Create login form @done(23-01-17 10:48)
+    ✔ Install Jest @done(23-01-17 11:03)
+    ✔ Create login form animation @done(23-01-17 11:03)
+    ☐ Create user authentication
+
+
+BACKEND-DEVELOPMENT 1:
+    ☐ API Setup
+    ☐ Customize default user model
+    ☐ Create user authentication using JWT's token
