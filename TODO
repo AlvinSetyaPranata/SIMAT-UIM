@@ -5,10 +5,15 @@ FRONTEND-DEVELOPMENT 1:
     ✔ Create login form animation @done(23-01-17 11:03)
     ✔ Fix erros @done(23-01-18 03:45)
     ✔ Create user authentication @done(23-01-18 03:45)
-    ☐ Create user Registration Form
+    ✔ Create user Registration Form @done(23-01-18 09:32)
+    ✔ Move handleForm to useLoginValidate hooks @done(23-01-19 11:50)
+    ☐ Create user registration system
+    ☐ Create Dashboard
+    ☐ Install Google API, Google login
 
 BACKEND-DEVELOPMENT 1:
     ✔ API Setup @done(23-01-17 14:18)
     ✔ Customize default user model @done(23-01-17 14:18)
     ✔ Integrate with frontend from diffrent origin @done(23-01-18 03:45)
+    ✔ Changed url to '/api' @done(23-01-19 04:07)
     ☐ Create user authentication using JWT's token

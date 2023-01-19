@@ -6,6 +6,11 @@
 </h2>
 
 
+# Versi
+
+<b>Peanut Butter</b>
+
+
 # Tekonlogi yang digunakan
 
 <ul>
