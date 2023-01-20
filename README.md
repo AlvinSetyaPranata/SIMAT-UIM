@@ -1,8 +1,6 @@
 # SIMAT
 ## _Sistem Informasi Akademik Terpadu_
 
-**Powered By** ![Alt text](https://raw.githubusercontent.com/AlvinSetyaPranata/alvinsetyaportfolio/master/public/logo%201.png)
-
 Applikasi untuk membantu mahasiswa dalam memanagement dan mengkontrol aktivitas yang berkaitan dengan perkuliahannya
 
 # Version
@@ -29,6 +27,8 @@ Dan tentunya applikasi ini adalah applikasi Open Source dan menggunakan metode *
 ## License
 
 Universitas Islam Madura
+
+## Powered By ![Alt text](https://raw.githubusercontent.com/AlvinSetyaPranata/alvinsetyaportfolio/master/public/logo%201.png)
 
  [React JS]: <https://reactjs.org>
  [Tailwind CSS]: <https://tailwindcss.com>
