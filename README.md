@@ -1,7 +1,7 @@
 # SIMAT
 ## _Sistem Informasi Akademik Terpadu_
 
-**Powered By** ![Alt text](https://assets.digitalocean.com/articles/alligator/boo.svg "a title")
+**Powered By** ![Alt text](https://raw.githubusercontent.com/pamekasancode/pamekasancode.github.io/903ca2eb6dbaa6c1f00ac88e3495d8a340164a40/images/logo.svg)
 
 Applikasi untuk membantu mahasiswa dalam memanagement dan mengkontrol aktivitas yang berkaitan dengan perkuliahannya
 
