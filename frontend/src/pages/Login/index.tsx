@@ -52,7 +52,7 @@ function Login() {
     }
   }
 
-  useEffect(() => console.log(state.msg), [state])
+  // useEffect(() => console.log(state.msg), [state])
 
   const handleForm = (event: SyntheticEvent) => {
     event.preventDefault()

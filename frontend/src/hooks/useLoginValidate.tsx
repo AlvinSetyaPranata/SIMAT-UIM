@@ -1,4 +1,4 @@
-import { useReducer, SetStateAction } from "react"
+import { useReducer } from "react"
 
 
 interface initialState {
@@ -52,6 +52,7 @@ function useLoginValidate() {
 
 
     function validation(res: responseType) {
+        console.log(res)
         if (res.status === 1) {
             if (res.msg === "User Not Found") {
                 dispatch({type: "UNREGISTERED_USERNAME", msg: "Username tidak ditemukan"})
