@@ -31,10 +31,13 @@ const Navbar: FC = () => {
         return currentLoc.pathname === pathId
     }
 
+
+
+
     return (
         <div className="container left-0 top-0 h-screen bg-primary w-[300px] py-6 flex flex-col justify-between">
 
-            <div className="grid place-items-center w-full gap-6 overflow-hidden">
+            <div className="grid place-items-center w-full gap-6 overflow-hidden mt-24">
                 <motion.button onClick={() => navigate("/detail")}
                     initial='buttonInitial'
                     animate={getCurrentLoc('/detail') ? 'buttonAnimate' : ''}
@@ -69,7 +72,6 @@ const Navbar: FC = () => {
                     </svg>
                     <h3 className={`font-semibold text-white text-lg ml-4 ${getCurrentLoc('/payments') ? 'text-primary' : 'text-white'}`}>Histori Pembayaran</h3>
                 </motion.button>
-
 
 
                 <motion.button onClick={() => navigate("/account")}

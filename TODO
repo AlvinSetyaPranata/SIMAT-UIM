@@ -8,7 +8,8 @@ FRONTEND-DEVELOPMENT 1:
     ✔ Create user Registration Form @done(23-01-18 09:32)
     ✔ Move handleForm to useLoginValidate hooks @done(23-01-19 11:50)
     ✔ Create user registration forms @done(23-01-19 15:15)
-    ☐ Create Dashboard
+    ☐ Create Dashboard @started(23-01-20 17:12)
+    ☐ Create hamburger toogle animation that sync to sidebar
     ☐ Install Google API, Google login
 
 BACKEND-DEVELOPMENT 1:
