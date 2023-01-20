@@ -28,7 +28,8 @@ Dan tentunya applikasi ini adalah applikasi Open Source dan menggunakan metode *
 
 Universitas Islam Madura
 
-## Powered By ![Alt text](https://raw.githubusercontent.com/AlvinSetyaPranata/alvinsetyaportfolio/master/public/logo%201.png)
+## Powered By 
+![Alt text](https://raw.githubusercontent.com/AlvinSetyaPranata/alvinsetyaportfolio/master/public/logo%201.png)
 
  [React JS]: <https://reactjs.org>
  [Tailwind CSS]: <https://tailwindcss.com>
