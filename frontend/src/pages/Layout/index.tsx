@@ -1,19 +1,20 @@
 // import Authentication from "../../routers/Authentication"
-import { useNavigate } from 'react-router-dom'
-import { FC, useEffect } from 'react'
+import { Outlet } from 'react-router-dom'
+import { FC, Suspense } from 'react'
+import Navbar from '../../components/Sidebar'
 
 
 const Layout: FC = () => {
   // const isLogedIn = Authentication()
-  const navigate = useNavigate()
-
-
-
-  useEffect(() => navigate("/login"), [])
   
 
   return (
-    <div></div>
+    <div className='container w-full min-h-screen overflow-hidden flex'>
+      <Navbar />
+      <Suspense>
+        <Outlet />
+      </Suspense>
+    </div>
   )
 }
 

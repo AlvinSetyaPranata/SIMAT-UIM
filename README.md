@@ -13,7 +13,7 @@ Applikasi untuk membantu mahasiswa dalam memanagement dan mengkontrol aktivitas 
 - Preview nilai UAS, UTS
 - DSB
 
-## Technologies
+# Technologies
 
 Applikasi ini dibuat menggunakan Teknologi terbaru, antara lain:
 
