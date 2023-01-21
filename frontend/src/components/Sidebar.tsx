@@ -5,7 +5,7 @@ import { motion } from "framer-motion"
 
 
 
-const Navbar: FC = () => {
+const Navbar: FC<{active: boolean}> = ({active}) => {
 
     const currentLoc = useLocation()
     const navigate = useNavigate()
@@ -35,8 +35,7 @@ const Navbar: FC = () => {
 
 
     return (
-        <div className="container left-0 top-0 h-screen bg-primary w-[300px] py-6 flex flex-col justify-between">
-
+        <div className={`container left-0 top-0 h-screen bg-primary w-[300px] py-6 flex flex-col justify-between transition-transfrom duration-500 ease-in ${active ? 'translate-x-[-100%] transition-transfrom duration-500 ease-out' : ''}`}>
             <div className="grid place-items-center w-full gap-6 overflow-hidden mt-24">
                 <motion.button onClick={() => navigate("/detail")}
                     initial='buttonInitial'
