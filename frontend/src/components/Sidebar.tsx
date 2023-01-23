@@ -5,7 +5,7 @@ import { motion } from "framer-motion"
 
 
 
-const Navbar: FC<{active: boolean}> = ({active}) => {
+const Sidebar: FC<{active: boolean}> = ({active}) => {
 
     const currentLoc = useLocation()
     const navigate = useNavigate()
@@ -35,17 +35,18 @@ const Navbar: FC<{active: boolean}> = ({active}) => {
 
 
     return (
-        <div className={`container left-0 top-0 h-screen bg-primary w-[300px] py-6 flex flex-col justify-between transition-transfrom duration-500 ease-in ${active ? 'translate-x-[-100%] transition-transfrom duration-500 ease-out' : ''}`}>
+        <div className={`container left-0 top-0 h-screen bg-primary w-[300px] py-6 flex flex-col justify-between transition-transfrom duration-500 ease-in sticky ${active ? 'w-[100px] transition-transfrom duration-500 ease-out' : ''}`}>
+            
             <div className="grid place-items-center w-full gap-6 overflow-hidden mt-24">
                 <motion.button onClick={() => navigate("/detail")}
                     initial='buttonInitial'
                     animate={getCurrentLoc('/detail') ? 'buttonAnimate' : ''}
                     variants={variants}
-                    className={`${baseButton} ${getCurrentLoc('/detail') ? 'bg-white' : ''}`}>
-                    <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    className={`${baseButton} ${active ? 'w-fit' : ''} ${getCurrentLoc('/detail') ? 'bg-white' : ''}`}>
+                    <svg width={25} height={25} viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path id="Vector" d="M12.6446 12.5002C11.0404 12.5002 9.66717 11.929 8.52481 10.7866C7.38245 9.64426 6.81127 8.271 6.81127 6.66683C6.81127 5.06266 7.38245 3.6894 8.52481 2.54704C9.66717 1.40468 11.0404 0.833496 12.6446 0.833496C14.2488 0.833496 15.622 1.40468 16.7644 2.54704C17.9068 3.6894 18.4779 5.06266 18.4779 6.66683C18.4779 8.271 17.9068 9.64426 16.7644 10.7866C15.622 11.929 14.2488 12.5002 12.6446 12.5002ZM0.977936 24.1668V20.0835C0.977936 19.2571 1.19085 18.4973 1.61669 17.8041C2.04155 17.1119 2.60641 16.5835 3.31127 16.2189C4.81821 15.4654 6.34946 14.9001 7.90502 14.5229C9.46058 14.1466 11.0404 13.9585 12.6446 13.9585C14.2488 13.9585 15.8286 14.1466 17.3842 14.5229C18.9397 14.9001 20.471 15.4654 21.9779 16.2189C22.6828 16.5835 23.2477 17.1119 23.6725 17.8041C24.0984 18.4973 24.3113 19.2571 24.3113 20.0835V24.1668H0.977936Z" className={getCurrentLoc("/detail") ? 'fill-primary' : 'fill-white'} />
                     </svg>
-                    <h3 className={`font-semibold text-lg ml-4 ${getCurrentLoc('/detail') ? 'text-primary' : 'text-white'}`}>Detail Mahasiswa</h3>
+                    <h3 className={`font-semibold text-lg ml-4 ${active ? 'hidden' : ''} ${getCurrentLoc('/detail') ? 'text-primary' : 'text-white'}`}>Detail Mahasiswa</h3>
                 </motion.button>
 
                 <motion.button onClick={() => navigate("/assignments")}
@@ -108,4 +109,4 @@ const Navbar: FC<{active: boolean}> = ({active}) => {
 }
 
 
-export default Navbar
+export default Sidebar
