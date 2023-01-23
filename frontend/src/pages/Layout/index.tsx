@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom'
 import { FC, Suspense } from 'react'
 import Sidebar from '../../components/Sidebar'
 import { useState } from 'react'
-import Navbar from '../../components/Navbar'
+import Topbar from '../../components/Topbar'
 
 
 const Layout: FC = () => {
@@ -43,7 +43,7 @@ const Layout: FC = () => {
       <Sidebar active={hamActive} />
 
       <div className='w-full h-max overflow-y-hidden'>
-        <Navbar />
+        <Topbar />
         <Suspense>
           <Outlet />
         </Suspense>
