@@ -1,16 +1,22 @@
-import { FC, useState, SyntheticEvent } from 'react'
+import { FC, useState, SyntheticEvent, useEffect } from 'react'
 import DateField from '../../components/DateField'
 // import FormTitle from '../../components/FormTitle'
 import NormalField from '../../components/NormalField'
 import OptionField from '../../components/OptionField'
 import TextField from '../../components/TextField'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { getToken } from '../../hooks/useToken'
+import useGetData from '../../hooks/useGetData'
 
 
 const Detail: FC = () => {
 
   const [currentTabs, setCurrentTabs] = useState<number>(1)
   const [editState, setEditState] = useState<boolean>(false)
+  const navigate = useNavigate()
+  const fieldData = {
+    fullname: ''
+  }
 
 
   const activeTabs = 'text-primary bg-white'
@@ -24,6 +30,15 @@ const Detail: FC = () => {
   function handleEdit(event: SyntheticEvent<HTMLSelectElement>) {
     event.currentTarget.value === "edit" ? setEditState(true) : setEditState(false)
   }
+
+  useEffect(() => {
+    const token = getToken()
+  
+    if (token === 100) {
+      navigate("/login")
+    }
+  }, [])
+
 
   return (
     <div className='h-max w-full p-6'>
@@ -45,7 +60,7 @@ const Detail: FC = () => {
           currentTabs === 1 &&
           <div className='w-full'>
             <div className='w-full h-max grid grid-cols-3 gap-x-6 gap-y-8' id='personal-data'>
-              <NormalField name="fullName" title="Nama Lengkap" span={2} readonly={!editState}/>
+              <NormalField name="fullName" title="Nama Lengkap" span={2} readonly={!editState} defaultValue={fieldData.fullname}/>
               <NormalField name="nik" title="NIK ( Nomer Induk Kependudukan )" readonly={!editState}/>
               <NormalField name="placeBirth" title="Tempat Lahir" readonly={!editState}/>
               <OptionField name="gender" title="Jenis Kelamin" items={["Pria", "Wanita"]} readonly={!editState}/>

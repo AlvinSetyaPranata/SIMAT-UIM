@@ -17,12 +17,12 @@ function index() {
   return (
     <BrowserRouter>
       <Routes>
-          <Route path='/' element={<Layout />}>
-            <Route path='/detail' element={<Detail />} />
-            <Route path='/assignments' element={<Assignment />} />
-            <Route path='/payments' element={<Payment />} />
-            <Route path='/account' element={<Account />} />
-            <Route path='/about' element={<About />} />
+          <Route path='/dashboard' element={<Layout />}>
+            <Route path='/dashboard/detail' element={<Detail />} />
+            <Route path='/dashboard/assignments' element={<Assignment />} />
+            <Route path='/dashboard/payments' element={<Payment />} />
+            <Route path='/dashboard/account' element={<Account />} />
+            <Route path='/dashboard/about' element={<About />} />
           </Route>
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Registration />} />

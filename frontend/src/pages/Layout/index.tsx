@@ -44,7 +44,7 @@ const Layout: FC = () => {
 
       <div className='w-full h-max overflow-y-hidden'>
         <Topbar />
-        <Suspense>
+        <Suspense fallback={<>Loading....</>}>
           <Outlet />
         </Suspense>
       </div>

@@ -1,73 +1,57 @@
-# from django.shortcuts import render
-from django.http import JsonResponse
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from django.http.request import QueryDict
 from django.contrib.auth import get_user_model
-from rest_framework.decorators import api_view
-from json import loads
-from .models import StudentModel
-
-# Create your views here.
+from .serializer import (UserRegistration, StudentRegistration)
 
 
-def check_users(data):
-    """
-    Return True if user is registered
-    """
+class Register(APIView):
 
-    user = get_user_model().objects.filter(username=data["username"])
-        
-    if user:
-        return True, user.get(username=data["username"])
+    def post(self, req):
+        req_data = req.data
 
-    return False, user
+        data = QueryDict('', mutable=True)
+        data.update(req_data)
 
 
-
-@api_view(['POST'])
-def user_auth(req):
-
-    data = loads(req.body)
-
-    status, obj = check_users(data)
+        msg  = self.validate_username(data)
+            
+        if msg: 
+            return Response({"msg" : msg}, status=status.HTTP_400_BAD_REQUEST)
 
 
-    if not status:
-        return JsonResponse({"status" : 1, 'msg' : "User Not Found"})
+        userSerializer = UserRegistration(data=data)
+
+        if not userSerializer.is_valid():
+            return Response({"msg" : "Data tidak cocok"}, status=status.HTTP_400_BAD_REQUEST)
+
+        userSerializer.save()
+
+        data.update({"user_object" : get_user_model().objects.get(username=data["username"]).id})
+
+        studentSerializer = StudentRegistration(data=data)
 
 
-    password_correct = obj.check_password(data["password"])
-    print(password_correct, data["password"])
+        if not studentSerializer.is_valid():
+            print(studentSerializer.errors)
+            return Response({"msg" : "Invalid Student"}, status=status.HTTP_400_BAD_REQUEST)
 
-    return JsonResponse({"status" : 0})
-
-
-@api_view(['POST'])
-def user_register(req):
-
-    data = loads(req.body)
+        studentSerializer.save()
 
 
-    account_data = [data.pop("username"), data.pop("password")]
-
-    # to make sure is not pretend as junk value
-    _dummy_var = [data.pop("confirm-password"), data.pop("")]
-    del _dummy_var
-
-    for x in data:
-        if not hasattr(StudentModel, x):
-            return JsonResponse({"status" : 0, "msg" : "".join(("data ", x, " Hilang"))})
+        return Response({"msg" : "User baru telah terdaftar", "username" : data["username"]}, status=status.HTTP_201_CREATED)
 
 
-    user_model = get_user_model()
+    def validate_username(self, data):
+        user = get_user_model()
 
-    user_model.objects.create_user(username=account_data[0], password=account_data[-1])
+        if not "username" in data:
+            return "username does not included"
 
-    StudentModel.objects.create(user_object=user_model.objects.get(username=account_data[0]), **data)
+        try:
+            user.objects.get(username=data["username"])
+            return "username already registered"
 
-    print(f"Account created with username of {account_data[0]} and password {account_data[-1]}")
-
-    # get_user_model().objects.create(username="alvin12345678", password="admin1234567")
-
-
-    return JsonResponse({"status" : 1, "msg" : "New user registered"})
-
-
+        except user.DoesNotExist:
+            return False

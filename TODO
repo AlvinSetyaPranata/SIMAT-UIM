@@ -11,7 +11,12 @@ FRONTEND-DEVELOPMENT 1:
     ✔ Create Dashboard @started(23-01-20 17:12) @done(23-01-23 10:15) @lasted(2d17h3m23s)
     ✔ Create hamburger toogle animation that sync to sidebar @done(23-01-21 10:17)
     ✔ Fix Hamburger issues @done(23-01-23 10:15)
-    ☐ Fix sidebar button onHide
+    ✔ Fix sidebar button onHide @done(23-01-24 11:25)
+    ✔ Integrate with api @started(23-01-25 20:17) @done(23-01-27 15:38) @lasted(1d19h21m33s)
+    ✔ handle on success ( registration ) @done(23-01-27 15:38)
+    ✔ Try to store username in localhost @done(23-01-27 15:38)
+    ☐ Fix useToken not triggered when in login
+    ☐ Solve how to automatically put data into form
     ☐ Install Google API, Google login
 
 
@@ -21,4 +26,5 @@ BACKEND-DEVELOPMENT 1:
     ✔ Integrate with frontend from diffrent origin @done(23-01-18 03:45)
     ✔ Changed url to '/api' @done(23-01-19 04:07)
     ✔ Create user registration view @done(23-01-20 10:10)
-    ☐ Create user authentication using JWT's token
+    ✔ Recreate view's and authenticate backend @done(23-01-27 15:38)
+    

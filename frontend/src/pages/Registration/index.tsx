@@ -5,8 +5,11 @@ import FormTitle from '../../components/FormTitle'
 import NormalField from '../../components/NormalField'
 import OptionField from '../../components/OptionField'
 import TextField from '../../components/TextField'
+import { useToken } from '../../hooks/useToken'
 
 const Registration: FC = () => {
+
+    const tokenFetcher = useToken()
 
     interface regisForm {
         fullName: string
@@ -94,13 +97,15 @@ const Registration: FC = () => {
                     throw new Error(`${e.name} Harap Diisi`)
                 }
                 
-                if (e.name === "password") {
+                else if (e.name === "password") {
                     password = e.value
                 }
                 
-                if (e.name === "confirm-password" && e.value !== password) {
+                else if (e.name === "confirm-password" && e.value !== password) {
                     throw new Error(`Password tidak sama`)
                 }
+
+                else if (!e.name) return
     
                 formStorage[e.name] = e.value
             })
@@ -119,8 +124,29 @@ const Registration: FC = () => {
             mode: "cors",
             body: JSON.stringify(formStorage)
         })
-            .then(res => res.json())
-            // .then(resData => console.log(resData))
+            .then(res => {                
+                const resJson = res.json()
+                
+                if (res.status == 400) {
+                    alert("Masalah ditemukan harap hubungi petugas BAAK!")
+                    console.log(resJson)
+                    return false
+                }
+                return resJson
+            })
+            .then(resData => {
+                if (resData) {
+                    const success = tokenFetcher({username: formStorage.username, password: formStorage.password})
+                
+                    if (success){
+                        navigate("/dashboard/detail")
+                        localStorage.setItem("username", resData["username"])
+                        return
+                    }
+
+                    alert("Something wrong!")
+                } 
+            })
     }
 
 

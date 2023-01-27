@@ -1,13 +1,16 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import Logo from '../../assets/logo-uim.png'
 import LoginFooter from '../../components/LoginFooter'
-import { SyntheticEvent, useEffect, useRef, useState } from 'react'
+import { SyntheticEvent, useRef, useState, useTransition, useEffect } from 'react'
 import Eye from '../../assets/eye.png'
 import EyeOff from '../../assets/eye-off.png'
-import useLoginValidate from '../../hooks/useLoginValidate'
+import useValidation from '../../hooks/useValidation'
+import {getToken, useToken} from '../../hooks/useToken'
 
 function Login() {
+
+  const navigate = useNavigate()
 
   const variants = {
     containerInit: {
@@ -34,16 +37,15 @@ function Login() {
 
 
 
+  const [isPending, startTransition] = useTransition()
   const username = useRef<HTMLInputElement | null>(null)
   const password = useRef<HTMLInputElement | null>(null)
-
+  
   const [revealPassword, setRevealPassword] = useState<Boolean>(false)
 
-
-
-  const [Postfn, state] = useLoginValidate()
-
-
+  const [state, setState] = useState<{type: string, msg: string}>({type: '', msg: ''})
+  
+  
   function handleReveal() {
     if (revealPassword) {
       setRevealPassword(false)
@@ -51,14 +53,31 @@ function Login() {
       setRevealPassword(true)
     }
   }
-
-  // useEffect(() => console.log(state.msg), [state])
+  
 
   const handleForm = (event: SyntheticEvent) => {
     event.preventDefault()
 
-    Postfn({username: username.current!.value, password: password.current!.value})
+    const formData = {username: username.current!.value, password: password.current!.value}
+
+    const status = useToken(formData)  // get access token and refresh token
+
+    if (status) {
+      localStorage.setItem("username", username.current!.value)
+      // startTransition(() => navigate("/dashboard/detail"))
+    }
+
+    // alert("Something wrong")
+
   }
+
+
+  useEffect(() => {
+    if (getToken() !== 100 && localStorage.getItem("username")) {
+      startTransition(() => navigate("/dashboard/detail"))
+    }
+  }, [])
+
 
   return (
     <div className="min-h-screen w-screen box-border flex justify-center items-center flex-col gap-8">
@@ -77,10 +96,10 @@ function Login() {
             <div className='grid'>
               <div className='flex justify-between w-full items-center'>
                 <label className='font-semibold text-lg'>Username</label>
-                <span className={`text-red-400 font-semibold text-sm ${state.type === 'username' ? state.spanCls : 'opacity-0'} empty:opacity-0`}>{state.msg}</span>
+                <span className={`text-red-400 font-semibold text-sm ${state.type === 'username' ? 'opacity-1' : 'opacity-0'} empty:opacity-0`}>{state.msg}</span>
               </div>
 
-              <input type="text" ref={username} className={`py-[6px] w-[300px] outline-none px-4 rounded-md border-2 mt-2 ${state.type === 'username' ? state.inputCls : ''} focus:border-slate-100`} />
+              <input type="text" ref={username} className={`py-[6px] w-[300px] outline-none px-4 rounded-md border-2 mt-2 ${state.type === 'username' ? 'border-red-400' : ''} focus:border-slate-100`} />
               <Link to='/register' className='text-link text-right font-semibold text-sm'>Belum terdaftar?</Link>
             </div>
 
@@ -90,10 +109,10 @@ function Login() {
             <div className='grid gap-y-2'>
               <div className='flex justify-between w-full items-center'>
                 <label className='font-semibold text-lg'>Password</label>
-                <span className={`text-red-400 font-semibold text-sm ${state.type === 'password' ? state.spanCls : 'opacity-0'} empty:opacity-0`}>{state.msg}</span>
+                <span className={`text-red-400 font-semibold text-sm ${state.type === 'password' ? 'opacity-1' : 'opacity-0'} empty:opacity-0`}>{state.msg}</span>
               </div>
               <div className='flex w-full items-center'>
-                <input type={revealPassword ? 'text' : 'password'} ref={password} className={`py-[6px] w-[300px] outline-none px-4 rounded-md border-2 mt-2 ${state.type === 'password' ? state.inputCls : ''} focus:border-slate-100`} />
+                <input type={revealPassword ? 'text' : 'password'} ref={password} className={`py-[6px] w-[300px] outline-none px-4 rounded-md border-2 mt-2 ${state.type === 'password' ? 'border-red-400' : ''} focus:border-slate-100`} />
                 <img src={revealPassword ? Eye : EyeOff} className="w-[20px] h-[20px] ml-4" alt="reveal" onClick={handleReveal} />
               </div>
 

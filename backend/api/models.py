@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import (
     AbstractBaseUser, BaseUserManager
 )
+from django.utils import timezone
 # Create your models here.
 
 class CustomUserManager(BaseUserManager):
@@ -10,8 +11,7 @@ class CustomUserManager(BaseUserManager):
             return ValueError("Nama Tidak ada")
 
         user = self.model(
-            username=username
-        )
+            username=username,        )
 
         user.set_password(password)
         user.save(using=self.db)
@@ -33,6 +33,9 @@ class CustomUserModel(AbstractBaseUser):
     username = models.CharField(max_length=255, unique=True, verbose_name='name')
     is_blocked = models.BooleanField(default=False)
     is_teacher = models.BooleanField(default=False)
+    last_login = models.DateTimeField(auto_now_add=True, editable=False)
+    registered_at = models.DateTimeField(verbose_name="Terdaftar Sejak", auto_now=True, editable=False)
+
 
     objects = CustomUserManager()
 
@@ -71,4 +74,5 @@ class StudentModel(models.Model):
     firstOpt = models.CharField(blank=True, null=True, verbose_name="Pilihan Pertama", max_length=50)
     secondOpt = models.CharField(blank=True, null=True, verbose_name="Pilihan Kedua", max_length=50)
     lastOpt = models.CharField(blank=True, null=True, verbose_name="Pilihan Terakhir", max_length=50)
+    username = models.CharField(max_length=255, verbose_name="username", null=True, blank=True)
     user_object = models.ForeignKey(CustomUserModel, on_delete=models.CASCADE)
