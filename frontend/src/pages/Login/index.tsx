@@ -40,6 +40,7 @@ function Login() {
   const [isPending, startTransition] = useTransition()
   const username = useRef<HTMLInputElement | null>(null)
   const password = useRef<HTMLInputElement | null>(null)
+  const tokeFetcher = useToken()
   
   const [revealPassword, setRevealPassword] = useState<Boolean>(false)
 
@@ -60,21 +61,20 @@ function Login() {
 
     const formData = {username: username.current!.value, password: password.current!.value}
 
-    const status = useToken(formData)  // get access token and refresh token
 
-    if (status) {
+    const status = tokeFetcher(formData) 
+
+    if (status || getToken() !== 100) {
       localStorage.setItem("username", username.current!.value)
-      // startTransition(() => navigate("/dashboard/detail"))
+      startTransition(() => navigate("/dashboard/detail"))
     }
-
-    // alert("Something wrong")
 
   }
 
 
   useEffect(() => {
-    if (getToken() !== 100 && localStorage.getItem("username")) {
-      startTransition(() => navigate("/dashboard/detail"))
+    if (getToken() === 100 && !localStorage.getItem("username")) {
+      startTransition(() => navigate("/detail"))
     }
   }, [])
 

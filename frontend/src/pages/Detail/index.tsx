@@ -1,11 +1,10 @@
 import { FC, useState, SyntheticEvent, useEffect } from 'react'
 import DateField from '../../components/DateField'
-// import FormTitle from '../../components/FormTitle'
 import NormalField from '../../components/NormalField'
 import OptionField from '../../components/OptionField'
 import TextField from '../../components/TextField'
 import { Link, useNavigate } from 'react-router-dom'
-import { getToken } from '../../hooks/useToken'
+import { verifyToken } from '../../hooks/useToken'
 import useGetData from '../../hooks/useGetData'
 
 
@@ -32,10 +31,10 @@ const Detail: FC = () => {
   }
 
   useEffect(() => {
-    const token = getToken()
-  
-    if (token === 100) {
-      navigate("/login")
+    const tokenValid = verifyToken()
+
+    if (!tokenValid) {
+      navigate('/login')
     }
   }, [])
 

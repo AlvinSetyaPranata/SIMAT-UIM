@@ -38,13 +38,35 @@ function RefreshToken() {
 
 }
 
+
+// should called in every pages that need authenticated
+function verifyToken(){
+    const token = getToken()
+    
+    if (token === 100) {
+        return false
+    }
+
+    const response = fetch('http://localhost:8000/api/user/auth/verify/', {
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        method: 'post',
+        mode: 'cors',
+        body: JSON.stringify(token)
+    })
+        .then((res) => res.status === 200 ? true : false)
+
+    return response
+    }
+
 function useToken() {
 
     function fetchToken(form: { username: string, password: string }) {
         const accessToken = localStorage.getItem("access")
         const refreshToken = localStorage.getItem("refresh")
 
-        // console.log(accessToken)
 
         if (!accessToken && !refreshToken) {
             const status = fetch("http://localhost:8000/api/user/auth/", {
@@ -56,20 +78,15 @@ function useToken() {
                 mode: 'cors',
                 body: JSON.stringify(form)
             })
-                .then((res) => {
-                    console.log(res)
-                    if (res.status === 200) return res.json()
-
-                    return false
-                })
+                .then((res) => res.status === 200 ? res.json() : false)
                 .then((data) => {
 
-                    console.log(data)
                     if (data) {
                         localStorage.setItem("access", data["access"])
                         localStorage.setItem("refresh", data["refresh"])
                         return true
                     }
+                    return false
 
                 })
                 .catch(() => {
@@ -79,6 +96,8 @@ function useToken() {
 
                 return status
             }
+
+        return true
         }
 
     return fetchToken
@@ -86,4 +105,4 @@ function useToken() {
 }
 
 
-export { useToken, getToken, RefreshToken }
+export { useToken, getToken, RefreshToken, verifyToken }

@@ -1,9 +1,14 @@
-import { FC } from 'react'
+import { FC, useEffect, useTransition } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Table from '../../components/Table'
+import { verifyToken } from '../../hooks/useToken'
 
 
 const Assignment: FC = () => {
-    
+
+    const [isPending, startTransition] = useTransition()
+    const navigate = useNavigate()
+
     const colsName = [
         "Mata Kuliah",
         "SKS",
@@ -19,6 +24,14 @@ const Assignment: FC = () => {
         ["Bahasa Indonesia", "2", "93", "A", "3.75", "3.75", "A", "LULUS"],
         ["Matematika Komputasi", "3", "96", "A", "2.75", "2.75", "D", "TIDAK LULUS"],
     ]
+
+    useEffect(() => {
+        const tokenValid = verifyToken()
+        
+        if (!tokenValid) {
+          navigate('/login')
+        }
+      }, [])
 
     
     return (

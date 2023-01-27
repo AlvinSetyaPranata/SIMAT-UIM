@@ -15,16 +15,18 @@ FRONTEND-DEVELOPMENT 1:
     ✔ Integrate with api @started(23-01-25 20:17) @done(23-01-27 15:38) @lasted(1d19h21m33s)
     ✔ handle on success ( registration ) @done(23-01-27 15:38)
     ✔ Try to store username in localhost @done(23-01-27 15:38)
-    ☐ Fix useToken not triggered when in login
+    ✔ Fix useToken not triggered when in login @done(23-01-27 17:02)
+    ☐ use UseContext instead of calling navigate in every dashboard components
     ☐ Solve how to automatically put data into form
     ☐ Install Google API, Google login
-
-
-BACKEND-DEVELOPMENT 1:
+    
+    
+    BACKEND-DEVELOPMENT 1:
     ✔ API Setup @done(23-01-17 14:18)
     ✔ Customize default user model @done(23-01-17 14:18)
     ✔ Integrate with frontend from diffrent origin @done(23-01-18 03:45)
     ✔ Changed url to '/api' @done(23-01-19 04:07)
     ✔ Create user registration view @done(23-01-20 10:10)
     ✔ Recreate view's and authenticate backend @done(23-01-27 15:38)
-    
+    ☐ create JWT auth to handle login
+    ☐ create view to fetch details

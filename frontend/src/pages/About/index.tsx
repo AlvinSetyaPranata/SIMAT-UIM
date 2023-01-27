@@ -1,7 +1,19 @@
-import { FC } from 'react'
-
+import { FC, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { verifyToken } from '../../hooks/useToken'
 
 const About: FC = () => {
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        const tokenValid = verifyToken()
+    
+        console.log(tokenValid)
+    
+        if (!tokenValid) {
+          navigate('/login')
+        }
+      }, [])
 
 
     return (

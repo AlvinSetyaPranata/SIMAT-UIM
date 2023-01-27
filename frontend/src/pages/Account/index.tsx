@@ -1,8 +1,19 @@
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import NormalField from '../../components/NormalField'
+import { verifyToken } from '../../hooks/useToken'
 
 
 const Account: FC = () => {
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        const tokenValid = verifyToken()
+        
+        if (!tokenValid) {
+          navigate('/login')
+        }
+      }, [])
 
     return (
         <div className='container mx-auto py-16'>
