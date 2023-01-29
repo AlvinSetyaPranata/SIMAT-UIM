@@ -75,7 +75,6 @@ function verifyToken(){
         body: JSON.stringify(body)
     })
         .then((res) => {
-            console.log(res.status)
             switch(res.status) {
                 case 401:
                     const refresher: Promise<boolean>|boolean = RefreshToken()

@@ -4,13 +4,14 @@ import { FC, Suspense } from 'react'
 import Sidebar from '../../components/Sidebar'
 import { useState } from 'react'
 import Topbar from '../../components/Topbar'
-
+import { Globals } from '../../Contexts/Globals'
 
 const Layout: FC = () => {
   // const isLogedIn = Authentication()
 
   const [hamActive, setHamActive] = useState<boolean>(false)
   const baseHamActiveTransition = "transition-all ease-in duration-500"
+
 
 
   function getHamState(elementId: number) {
@@ -31,7 +32,7 @@ const Layout: FC = () => {
 
   return (
     <div className='border-red-500 w-full h-max flex'>
-    
+
       <div className="group rounded-md left-6 p-[4px] bg-white h-fit top-4 border-2 border-primary z-20 fixed" onClick={() => hamActive ? setHamActive(false) : setHamActive(true)}>
         <svg viewBox='0 -10 100 100' className='w-[30px]' fill="none">
           <path d="m 20 20 h 60 " className={`${baseHamActiveTransition} stroke-[10px] stroke-primary rounded-md stroke-external ${getHamState(1)}`}></path>
@@ -45,7 +46,9 @@ const Layout: FC = () => {
       <div className='w-full h-max overflow-y-hidden'>
         <Topbar />
         <Suspense fallback={<>Loading....</>}>
-          <Outlet />
+          <Globals>
+            <Outlet />
+          </Globals>
         </Suspense>
       </div>
     </div>

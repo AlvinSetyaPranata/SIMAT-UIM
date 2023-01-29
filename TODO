@@ -16,7 +16,7 @@ FRONTEND-DEVELOPMENT 1:
     ✔ handle on success ( registration ) @done(23-01-27 15:38)
     ✔ Try to store username in localhost @done(23-01-27 15:38)
     ✔ Fix useToken not triggered when in login @done(23-01-27 17:02)
-    ☐ use UseContext instead of calling navigate in every dashboard components
+    ✔ use UseContext instead of calling navigate in every dashboard components @done(23-01-29 18:36)
     ☐ Solve how to automatically put data into form
     ☐ Install Google API, Google login
     

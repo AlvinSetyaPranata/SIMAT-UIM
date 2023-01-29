@@ -1,18 +1,21 @@
-import { FC, useState, SyntheticEvent, useEffect } from 'react'
+import { FC, useState, SyntheticEvent, useEffect, useContext } from 'react'
 import DateField from '../../components/DateField'
 import NormalField from '../../components/NormalField'
 import OptionField from '../../components/OptionField'
 import TextField from '../../components/TextField'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { getToken, verifyToken } from '../../hooks/useToken'
 import useGetData from '../../hooks/useGetData'
+import { Context } from '../../Contexts/Globals'
 
 
 const Detail: FC = () => {
 
   const [currentTabs, setCurrentTabs] = useState<number>(1)
   const [editState, setEditState] = useState<boolean>(false)
-  const navigate = useNavigate()
+  const {navigate,} = useContext(Context)
+
+
   const fieldData = {
     fullname: ''
   }
@@ -37,6 +40,8 @@ const Detail: FC = () => {
     if (!tokenValid || !token || !refresh || !localStorage.getItem("username")) {
       navigate('/login')
     }
+
+    const data: Promise<false|undefined> = useGetData("detail")
 
   }, [])
 

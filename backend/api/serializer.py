@@ -64,3 +64,7 @@ class StudentRegistration(serializers.ModelSerializer):
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=255, required=True)
     password = serializers.CharField(max_length=255, required=True, write_only=True)
+
+
+class DetailSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=255, required=True)

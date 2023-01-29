@@ -10,12 +10,19 @@
 import { getToken, RefreshToken } from "./useToken"
 
 
-function fetchData(param: string, body: {}) {
+function fetchData(param: string, token: string) {
+
+    const username = localStorage.getItem("username")
+
+    if (!username || !token) return false
     
+    const body = {"username" : username}
+
     const data = fetch(`http://localhost:8000/api/user/${param}/`, {
         headers: {
             "Content-Type" : "application/json",
-            "Accept" : "application/json"
+            "Accept" : "application/json",
+            "Authentication" : "JWT " + token
         },
         method: "post",
         mode: "cors",
@@ -26,20 +33,27 @@ function fetchData(param: string, body: {}) {
 }
 
 
-async function useGetData(type_data: string, token: {}){
-    const res = fetchData(type_data, {})
+async function useGetData(resource: string){
+    const {token, refresh} = getToken()
+
+    if (!token) {
+        return false
+    }
+
+    const res: Promise<void>|boolean = fetchData(resource, token)
 
     res.then((response) => {
         switch(response.status) {
             case 1: 
             // token expired
                 RefreshToken()
-                const token: number|{} = getToken() 
+                const token: {token: null|string, refresh: null|string} = getToken() 
                 
-                if (token === 100){
-                    return 100
+                if (!token.token){
+                    // redirect to login
+                    return false
                 }
-                return fetchData(type_data, token)
+                return fetchData(resource, token)
 
             default:
                 return res

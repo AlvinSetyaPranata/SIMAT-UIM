@@ -7,4 +7,5 @@ urlpatterns = [
     path('user/auth/', views.Login.as_view()),
     path('user/auth/refresh/', TokenRefreshView.as_view()),
     path('user/auth/verify/', TokenVerifyView.as_view()),
+    path('user/detail/', views.FetchDetail.as_view()),
 ]
