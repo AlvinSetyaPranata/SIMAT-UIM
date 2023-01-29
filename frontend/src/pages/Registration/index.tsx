@@ -93,21 +93,24 @@ const Registration: FC = () => {
 
         try{
             elements.forEach((e: HTMLInputElement) => {
-                if (!e.value) {
-                    throw new Error(`${e.name} Harap Diisi`)
+                let name = e.name
+                let value = e.value
+
+                if (!value) {
+                    throw new Error(`${name} Harap Diisi`)
                 }
                 
-                else if (e.name === "password") {
+                else if (name === "password") {
                     password = e.value
                 }
                 
-                else if (e.name === "confirm-password" && e.value !== password) {
+                else if (name === "confirm-password" && value !== password) {
                     throw new Error(`Password tidak sama`)
                 }
 
-                else if (!e.name) return
+                else if (name) return
     
-                formStorage[e.name] = e.value
+                formStorage[name] = value
             })
         } catch (e) {
             alert(`${e} Harap Diisi`)

@@ -6,7 +6,7 @@ import { SyntheticEvent, useRef, useState, useTransition, useEffect } from 'reac
 import Eye from '../../assets/eye.png'
 import EyeOff from '../../assets/eye-off.png'
 import useValidation from '../../hooks/useValidation'
-import {getToken, useToken} from '../../hooks/useToken'
+import {getToken, useToken, verifyToken} from '../../hooks/useToken'
 
 function Login() {
 
@@ -40,9 +40,10 @@ function Login() {
   const [isPending, startTransition] = useTransition()
   const username = useRef<HTMLInputElement | null>(null)
   const password = useRef<HTMLInputElement | null>(null)
-  const tokeFetcher = useToken()
+  const tokenFetcher = useToken()
   
   const [revealPassword, setRevealPassword] = useState<Boolean>(false)
+  const [tokenPending, setTokenPending] = useState<Boolean>(false)
 
   const [state, setState] = useState<{type: string, msg: string}>({type: '', msg: ''})
   
@@ -62,19 +63,28 @@ function Login() {
     const formData = {username: username.current!.value, password: password.current!.value}
 
 
-    const status = tokeFetcher(formData) 
 
-    if (status || getToken() !== 100) {
-      localStorage.setItem("username", username.current!.value)
-      startTransition(() => navigate("/dashboard/detail"))
+    const success = () => startTransition(() => navigate("/dashboard/detail"))
+  
+
+    const failed = () => {
+      localStorage.clear()
+      navigate('/login')
     }
 
+
+    tokenFetcher(formData, success, failed) 
+      
   }
 
 
   useEffect(() => {
-    if (getToken() === 100 && !localStorage.getItem("username")) {
-      startTransition(() => navigate("/detail"))
+    const {token, refresh} = getToken()
+    const tokenValid = verifyToken()
+
+
+    if (token && localStorage.getItem("username") && refresh && tokenValid) {
+      startTransition(() => navigate("/dashboard/detail"))
     }
   }, [])
 

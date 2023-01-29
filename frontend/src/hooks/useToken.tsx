@@ -1,4 +1,5 @@
 
+
 function getToken() {
     /** 
      * return's object that containing access and refresh token
@@ -11,7 +12,7 @@ function getToken() {
     const refreshToken = localStorage.getItem("refresh")
 
     if (!accessToken && !refreshToken) {
-        return 100
+        return {token: null, refresh: null}
     }
 
     return { token: localStorage.getItem("access"), refresh: localStorage.getItem("refresh") }
@@ -19,57 +20,95 @@ function getToken() {
 
 
 function RefreshToken() {
-    const refresh = localStorage.getItem("refresh")
+    const token: {token: null|string, refresh: null|string} = getToken()
 
-    if (!refresh) return 100
+    if (!token.refresh) return false
 
-    const body = { 'refresh': refresh }
+    const body = { 'refresh': token.refresh }
 
-    fetch("http://localhost:8000/api/user/auth/refresh/", {
+    const status = fetch("http://localhost:8000/api/user/auth/refresh/", {
         headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            'Accept': 'application/json',
         },
         method: 'post',
         mode: 'cors',
         body: JSON.stringify(body)
-    }).then((res) => res.json())
-        .then((data) => localStorage.setItem("access", data["access"]))
+    }).then((res) => {
+        if (res.status === 401) {
+            return false
+        }
+        
+        return res.json()
+        
+    })
+        .then((data) => {
+            if (!data) return false
+
+            localStorage.setItem("access", data["access"])
+            return true
+        }) // return false if data is false or refresh token is expired!
+
+    return status
 
 }
 
 
 // should called in every pages that need authenticated
+// if token is expired then it will automatically refresh token
 function verifyToken(){
-    const token = getToken()
+    const {token, refresh} = getToken()
     
-    if (token === 100) {
+    if (!token || !refresh) {
         return false
     }
 
-    const response = fetch('http://localhost:8000/api/user/auth/verify/', {
+    const body = {'token' : token}
+
+    const status = fetch('http://localhost:8000/api/user/auth/verify/', {
         headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            'Accept': 'application/json',
         },
         method: 'post',
         mode: 'cors',
-        body: JSON.stringify(token)
+        body: JSON.stringify(body)
     })
-        .then((res) => res.status === 200 ? true : false)
+        .then((res) => {
+            console.log(res.status)
+            switch(res.status) {
+                case 401:
+                    const refresher: Promise<boolean>|boolean = RefreshToken()
+                    if (!refresher) return false
+                    return true
+                    
+                    
+                case 200:
+                    return true
+                    
 
-    return response
+                case 500:
+                    return false
+                    
+
+                default:
+                    return false
+                    
+                }
+        })
+
+    return status
     }
 
 function useToken() {
 
-    function fetchToken(form: { username: string, password: string }) {
+    function fetchToken(form: { username: string, password: string}, onSucess: () => void, onFailed: () => void) {
         const accessToken = localStorage.getItem("access")
         const refreshToken = localStorage.getItem("refresh")
 
-
         if (!accessToken && !refreshToken) {
-            const status = fetch("http://localhost:8000/api/user/auth/", {
+            
+            fetch("http://localhost:8000/api/user/auth/", {
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
@@ -80,24 +119,22 @@ function useToken() {
             })
                 .then((res) => res.status === 200 ? res.json() : false)
                 .then((data) => {
-
+                    // console.log(data)
                     if (data) {
                         localStorage.setItem("access", data["access"])
                         localStorage.setItem("refresh", data["refresh"])
-                        return true
+                        localStorage.setItem("username", data["username"])
+                        onSucess()
+                        return
                     }
-                    return false
+                    return onFailed()
 
                 })
                 .catch(() => {
                     alert("Server tidak merespon harap coba lagi nanti!")
-                    return false
+                    return onFailed()
                 })
-
-                return status
             }
-
-        return true
         }
 
     return fetchToken

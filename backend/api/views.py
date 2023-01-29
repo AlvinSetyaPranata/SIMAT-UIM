@@ -1,10 +1,12 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.contrib.auth import authenticate
 from django.http.request import QueryDict
 from django.contrib.auth import get_user_model
-from .serializer import (UserRegistration, StudentRegistration)
-
+from .serializer import (UserRegistration, StudentRegistration, LoginSerializer)
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 class Register(APIView):
 
@@ -55,3 +57,29 @@ class Register(APIView):
 
         except user.DoesNotExist:
             return False
+
+
+
+class Login(APIView):
+
+    def post(self, request):
+        serializer = LoginSerializer(data=request.data)
+        
+        if serializer.is_valid():
+            user = authenticate(
+                request,
+                **serializer.initial_data
+            )
+
+            if user:
+                token = RefreshToken.for_user(user)
+                return Response({'access' : str(token.access_token), 'refresh' : str(token), 'username' : str(user)}, status=status.HTTP_200_OK)
+
+            return Response({'msg' : 'Password salah atau username tidak ditemukan!'}, status=status.HTTP_404_NOT_FOUND)
+
+
+        print(serializer.error_messages)
+
+        return Response({'msg' : 'Form tidak valid!'}, status=status.HTTP_400_BAD_REQUEST)
+
+

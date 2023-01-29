@@ -4,7 +4,7 @@ import NormalField from '../../components/NormalField'
 import OptionField from '../../components/OptionField'
 import TextField from '../../components/TextField'
 import { Link, useNavigate } from 'react-router-dom'
-import { verifyToken } from '../../hooks/useToken'
+import { getToken, verifyToken } from '../../hooks/useToken'
 import useGetData from '../../hooks/useGetData'
 
 
@@ -31,11 +31,13 @@ const Detail: FC = () => {
   }
 
   useEffect(() => {
+    const {token, refresh} = getToken()
     const tokenValid = verifyToken()
 
-    if (!tokenValid) {
+    if (!tokenValid || !token || !refresh || !localStorage.getItem("username")) {
       navigate('/login')
     }
+
   }, [])
 
 

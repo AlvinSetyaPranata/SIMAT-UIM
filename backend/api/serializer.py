@@ -1,6 +1,6 @@
-from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from .models import StudentModel
+from rest_framework import serializers
 
 
 CustomBaseUser = get_user_model()
@@ -59,3 +59,8 @@ class StudentRegistration(serializers.ModelSerializer):
 
         return student
 
+
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=255, required=True)
+    password = serializers.CharField(max_length=255, required=True, write_only=True)
