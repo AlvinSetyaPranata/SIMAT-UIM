@@ -13,7 +13,10 @@ const Detail: FC = () => {
 
   const [currentTabs, setCurrentTabs] = useState<number>(1)
   const [editState, setEditState] = useState<boolean>(false)
-  const {navigate,} = useContext(Context)
+  const [tokenStatus, setTokenStatus] = useState<boolean|string>("pending")
+
+  const {navigate, transition} = useContext(Context)
+
 
 
   const fieldData = {
@@ -35,13 +38,22 @@ const Detail: FC = () => {
 
   useEffect(() => {
     const {token, refresh} = getToken()
-    const tokenValid = verifyToken()
+    verifyToken(setTokenStatus)
 
-    if (!tokenValid || !token || !refresh || !localStorage.getItem("username")) {
+    const onSuccess = () => {
+        console.log("success")
+    }
+
+    const onFailed = () => {
+        console.log("success")
+    }
+
+
+    if (!tokenStatus || !token || !refresh || !localStorage.getItem("username")) {
       navigate('/login')
     }
 
-    const data: Promise<false|undefined> = useGetData("detail")
+    const data: {} = useGetData("detail", onSuccess, onFailed)
 
   }, [])
 

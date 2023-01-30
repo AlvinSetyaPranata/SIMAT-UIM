@@ -1,10 +1,11 @@
-import { createContext, useTransition, ReactElement, FC, TransitionStartFunction } from 'react'
+import { createContext, useTransition, ReactElement, FC, TransitionStartFunction, Dispatch, useState } from 'react'
 import { useNavigate, NavigateFunction } from 'react-router-dom'
 
 
 interface ContextType {
     navigate: NavigateFunction 
     transition: TransitionStartFunction
+
 }
 
 export const Context = createContext<ContextType|null>(null)
@@ -20,7 +21,8 @@ export const Globals: FC<{ children: ReactElement | null }> = ({ children }) => 
             navigate: navigate,
             transition: startTransition,
         }}>
-            {children}
+            {isPending ? <div>Loading</div>  : children}
+
         </Context.Provider>
     )
 }

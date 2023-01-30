@@ -9,9 +9,7 @@ const Payment: FC = () => {
 
     useEffect(() => {
         const tokenValid = verifyToken()
-    
-        console.log(tokenValid)
-    
+        
         if (!tokenValid) {
           navigate('/login')
         }

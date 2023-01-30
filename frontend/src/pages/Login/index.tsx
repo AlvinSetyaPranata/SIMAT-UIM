@@ -6,7 +6,7 @@ import { SyntheticEvent, useRef, useState, useTransition, useEffect } from 'reac
 import Eye from '../../assets/eye.png'
 import EyeOff from '../../assets/eye-off.png'
 import useValidation from '../../hooks/useValidation'
-import {getToken, useToken, verifyToken} from '../../hooks/useToken'
+import { getToken, RefreshToken, useToken, verifyToken } from '../../hooks/useToken'
 
 function Login() {
 
@@ -38,16 +38,18 @@ function Login() {
 
 
   const [isPending, startTransition] = useTransition()
+  const [revealPassword, setRevealPassword] = useState<Boolean>(false)
+  const [tokenStatus, setTokenStatus] = useState<boolean>(false)
+
   const username = useRef<HTMLInputElement | null>(null)
   const password = useRef<HTMLInputElement | null>(null)
-  const tokenFetcher = useToken()
-  
-  const [revealPassword, setRevealPassword] = useState<Boolean>(false)
-  const [tokenPending, setTokenPending] = useState<Boolean>(false)
 
-  const [state, setState] = useState<{type: string, msg: string}>({type: '', msg: ''})
-  
-  
+  const tokenFetcher = useToken()
+
+
+  const [state, setState] = useState<{ type: string, msg: string }>({ type: '', msg: '' })
+
+
   function handleReveal() {
     if (revealPassword) {
       setRevealPassword(false)
@@ -55,35 +57,44 @@ function Login() {
       setRevealPassword(true)
     }
   }
-  
+
 
   const handleForm = (event: SyntheticEvent) => {
     event.preventDefault()
 
-    const formData = {username: username.current!.value, password: password.current!.value}
-
+    const formData = { username: username.current!.value, password: password.current!.value }
 
 
     const success = () => startTransition(() => navigate("/dashboard/detail"))
-  
+
 
     const failed = () => {
-      localStorage.clear()
-      navigate('/login')
+      const onRefreshFaield = () => {
+        localStorage.clear()
+        navigate("/login")
+      }
+
+      const onRefreshSuccess = () => {
+        startTransition(() => navigate("/dashboard/detail"))
+      }
+
+      RefreshToken(onRefreshSuccess, onRefreshFaield)
     }
 
 
-    tokenFetcher(formData, success, failed) 
-      
+    tokenFetcher(formData, success, failed)
+
   }
 
 
   useEffect(() => {
-    const {token, refresh} = getToken()
-    const tokenValid = verifyToken()
+    const { token, refresh } = getToken()
+    verifyToken(setTokenStatus)
+
+    console.log(tokenStatus)
 
 
-    if (token && localStorage.getItem("username") && refresh && tokenValid) {
+    if (token && localStorage.getItem("username") && refresh && tokenStatus) {
       startTransition(() => navigate("/dashboard/detail"))
     }
   }, [])

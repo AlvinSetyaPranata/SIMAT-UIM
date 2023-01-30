@@ -132,7 +132,6 @@ const Registration: FC = () => {
                 
                 if (res.status == 400) {
                     alert("Masalah ditemukan harap hubungi petugas BAAK!")
-                    console.log(resJson)
                     return false
                 }
                 return resJson

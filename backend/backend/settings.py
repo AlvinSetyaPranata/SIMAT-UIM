@@ -135,12 +135,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'api.CustomUserModel'
 
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True
 
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:8000',
-    'http://localhost:5173'
-)
+# CORS_ORIGIN_WHITELIST = (
+#     'http://localhost:8000',
+#     'http://localhost:5173'
+# )
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -154,5 +154,6 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME' : timedelta(hours=1),
-    'REFRESH_TOKEN_LIFETIME' : timedelta(days=1)
+    'REFRESH_TOKEN_LIFETIME' : timedelta(days=1),
+    'AUTH_HEADER_TYPES' : ('JWT', 'Bearer')
 }

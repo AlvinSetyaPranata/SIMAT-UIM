@@ -2,6 +2,7 @@ from rest_framework.views import APIView, View
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate
+from django.core import serializers
 from django.http.request import QueryDict
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -88,18 +89,19 @@ class FetchDetail(APIView):
         serializer = DetailSerializer(data=req.data)
 
         if serializer.is_valid():
-            student_exists = self.validate_student(serializer.initial_data)
+            student = self.validate_student(serializer.initial_data)
 
-            if student_exists:
-                return Response
 
-        return Response({}, status=status.HTTP_200_OK)
+            if student:
+                return Response({'data' : serializers.serialize('json', [student])}, status=status.HTTP_200_OK)
+
+        return Response({'msg' : 'Invalid post data'}, status=status.HTTP_400_BAD_REQUEST)
 
 
     def validate_student(self, data):
         try:
-            StudentModel.objects.get(**data)
-            return True
+            student = StudentModel.objects.get(**data)
+            return student
 
         except StudentModel.DoesNotExist:
             return False

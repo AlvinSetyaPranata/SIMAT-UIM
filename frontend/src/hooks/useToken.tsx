@@ -1,3 +1,4 @@
+import { useState, Dispatch } from "react"
 
 
 function getToken() {
@@ -19,14 +20,14 @@ function getToken() {
 }
 
 
-function RefreshToken() {
+function RefreshToken(onSuccess: () => void, onFailed: () => void) {
     const token: {token: null|string, refresh: null|string} = getToken()
 
     if (!token.refresh) return false
 
     const body = { 'refresh': token.refresh }
 
-    const status = fetch("http://localhost:8000/api/user/auth/refresh/", {
+    fetch("http://localhost:8000/api/user/auth/refresh/", {
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -43,20 +44,20 @@ function RefreshToken() {
         
     })
         .then((data) => {
-            if (!data) return false
+            if (!data) return onFailed()
 
             localStorage.setItem("access", data["access"])
-            return true
-        }) // return false if data is false or refresh token is expired!
+            onSuccess()
+        })
 
-    return status
 
 }
 
 
 // should called in every pages that need authenticated
 // if token is expired then it will automatically refresh token
-function verifyToken(){
+
+function verifyToken(setStatus: Dispatch<React.SetStateAction<boolean|string>>){
     const {token, refresh} = getToken()
     
     if (!token || !refresh) {
@@ -65,7 +66,7 @@ function verifyToken(){
 
     const body = {'token' : token}
 
-    const status = fetch('http://localhost:8000/api/user/auth/verify/', {
+    fetch('http://localhost:8000/api/user/auth/verify/', {
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -77,26 +78,25 @@ function verifyToken(){
         .then((res) => {
             switch(res.status) {
                 case 401:
-                    const refresher: Promise<boolean>|boolean = RefreshToken()
-                    if (!refresher) return false
-                    return true
+                    return RefreshToken(() => setStatus(true), () => setStatus(false))
                     
                     
                 case 200:
-                    return true
-                    
+                    setStatus(true)
+                    return
 
                 case 500:
-                    return false
-                    
+                    setStatus(false)
+                    return
+
 
                 default:
-                    return false
+                    setStatus(false)
+                    return
                     
                 }
         })
 
-    return status
     }
 
 function useToken() {
@@ -134,6 +134,8 @@ function useToken() {
                     return onFailed()
                 })
             }
+
+            return onFailed()
         }
 
     return fetchToken

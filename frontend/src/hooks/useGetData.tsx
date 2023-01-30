@@ -14,7 +14,7 @@ function fetchData(param: string, token: string) {
 
     const username = localStorage.getItem("username")
 
-    if (!username || !token) return false
+    if (!username || !token) return new Promise(() => false)
     
     const body = {"username" : username}
 
@@ -22,46 +22,55 @@ function fetchData(param: string, token: string) {
         headers: {
             "Content-Type" : "application/json",
             "Accept" : "application/json",
-            "Authentication" : "JWT " + token
+            "Authorization" : "JWT " + token
         },
         method: "post",
         mode: "cors",
         body: JSON.stringify(body)
-    }).then((res) => res.json())
+    })
+        .then((res) => {
+            switch(res.status) {
+                case 401: 
+                // token expired
+                    RefreshToken(() => true, () => false)
+                    const token: {token: null|string, refresh: null|string} = getToken() 
+                    
+                    if (!token.token){
+                        // redirect to login
+                        return false
+                    }
+                    fetchData(param, token.token)
+                    return true
+
+                case 200:
+                    return res
+
+                case 500:
+                    return false
+            }
+        })
+        .then((data: any) => data ? data.json() : false)
 
     return data
 }
 
 
-async function useGetData(resource: string){
+async function useGetData(resource: string, onSuccess: () => void, onFailed: () => void){
     const {token, refresh} = getToken()
 
     if (!token) {
         return false
     }
 
-    const res: Promise<void>|boolean = fetchData(resource, token)
+    let data = {}
 
-    res.then((response) => {
-        switch(response.status) {
-            case 1: 
-            // token expired
-                RefreshToken()
-                const token: {token: null|string, refresh: null|string} = getToken() 
-                
-                if (!token.token){
-                    // redirect to login
-                    return false
-                }
-                return fetchData(resource, token)
+    const res: Promise<any> = fetchData(resource, token)
 
-            default:
-                return res
-        }
-    })
-
-
+    res.then((status) => {data = status})
+    
+    return data
 } 
+
 
 
 export default useGetData
