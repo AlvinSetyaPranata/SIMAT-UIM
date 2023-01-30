@@ -1,5 +1,4 @@
-# SIMAT
-## _Sistem Informasi Akademik Terpadu_
+# SIMAT - _Sistem Informasi Akademik Terpadu_
 
 Applikasi untuk membantu mahasiswa dalam memanagement dan mengkontrol aktivitas yang berkaitan dengan perkuliahannya
 
