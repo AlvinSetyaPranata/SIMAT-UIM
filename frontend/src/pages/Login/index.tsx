@@ -39,7 +39,7 @@ function Login() {
 
   const [isPending, startTransition] = useTransition()
   const [revealPassword, setRevealPassword] = useState<Boolean>(false)
-  const [tokenStatus, setTokenStatus] = useState<boolean>(false)
+  const [tokenStatus, setTokenStatus] = useState<boolean|string>("pending")
 
   const username = useRef<HTMLInputElement | null>(null)
   const password = useRef<HTMLInputElement | null>(null)
@@ -91,13 +91,10 @@ function Login() {
     const { token, refresh } = getToken()
     verifyToken(setTokenStatus)
 
-    console.log(tokenStatus)
-
-
-    if (token && localStorage.getItem("username") && refresh && tokenStatus) {
+    if (token && localStorage.getItem("username") && refresh && tokenStatus === true) {
       startTransition(() => navigate("/dashboard/detail"))
     }
-  }, [])
+  }, [tokenStatus])
 
 
   return (

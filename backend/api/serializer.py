@@ -68,3 +68,45 @@ class LoginSerializer(serializers.Serializer):
 
 class DetailSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=255, required=True)
+
+
+def StudentSerializer(query):
+    data = {}
+    
+    fields =  (
+            'fullName',
+            'nik',
+            'gender',
+            'placeBirth',
+            'dateBirth',
+            'monthBirth',
+            'yearBirth',
+            'religion',
+            'email',
+            'phoneNumber',
+            'addr',
+            'postalCode',
+            'province',
+            'districts',
+            'subDistricts',
+            'lastEdu',
+            'schoolName',
+            'schoolAddr',
+            'firstOpt',
+            'secondOpt',
+            'lastOpt',
+            'user_object',
+            'username'
+        )
+
+    for field_name in fields:
+        value = str(getattr(query, field_name))
+
+        if value.isnumeric():
+            data[field_name] = int(value)
+
+        else:
+            data[field_name] = value
+
+
+    return data

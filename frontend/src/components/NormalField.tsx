@@ -10,7 +10,7 @@ interface Props {
   type?: string
   readonly?: boolean
   externalStyle?: string
-  defaultValue?: string
+  defaultValue?: string|number
   displayEye?: boolean
 }
 

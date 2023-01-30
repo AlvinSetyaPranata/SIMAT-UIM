@@ -1,4 +1,5 @@
-from rest_framework.views import APIView, View
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate
@@ -6,7 +7,7 @@ from django.core import serializers
 from django.http.request import QueryDict
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializer import (UserRegistration, StudentRegistration, LoginSerializer, DetailSerializer)
+from .serializer import (UserRegistration, StudentRegistration, LoginSerializer, DetailSerializer, StudentSerializer)
 from .models import StudentModel
 
 class Register(APIView):
@@ -64,7 +65,7 @@ class Register(APIView):
 class Login(APIView):
 
     def post(self, request):
-        serializer = LoginSerializer(data=request.data)
+        serializer = LoginSerializer(data=self.validate_request(request.data))
         
         if serializer.is_valid():
             user = authenticate(
@@ -83,19 +84,46 @@ class Login(APIView):
 
         return Response({'msg' : 'Form tidak valid!'}, status=status.HTTP_400_BAD_REQUEST)
 
+
+    def validate_request(self, data):
+        res = {}
+
+        for keys in data:
+            if type(data[keys]) == list or type(data[keys]) == tuple:
+                res[keys] = data[keys][0]
+
+            else:
+                res[keys] = data[keys]
+
+        return res
+
 class FetchDetail(APIView):
+    permission_classes = [IsAuthenticated]
 
     def post(self, req):
-        serializer = DetailSerializer(data=req.data)
+        serializer = DetailSerializer(data=self.validate_request(req.data))
 
         if serializer.is_valid():
             student = self.validate_student(serializer.initial_data)
 
 
             if student:
-                return Response({'data' : serializers.serialize('json', [student])}, status=status.HTTP_200_OK)
+                return Response(StudentSerializer(student), status=status.HTTP_200_OK)
 
         return Response({'msg' : 'Invalid post data'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def validate_request(self, data):
+        res = {}
+
+        for keys in data:
+            if type(data[keys]) == list or type(data[keys]) == tuple:
+                res[keys] = data[keys][0]
+
+            else:
+                res[keys] = data[keys]
+
+        return res
 
 
     def validate_student(self, data):

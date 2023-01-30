@@ -10,15 +10,20 @@
 import { getToken, RefreshToken } from "./useToken"
 
 
-function fetchData(param: string, token: string) {
+function useGetData(param: string,  onComplete: (res: any) => void) {
 
     const username = localStorage.getItem("username")
+    const {token,} = getToken()
 
-    if (!username || !token) return new Promise(() => false)
+    if (!username || !token) {
+        const res = new Promise(() => false)
+        onComplete(res)
+        return
+    }
     
     const body = {"username" : username}
 
-    const data = fetch(`http://localhost:8000/api/user/${param}/`, {
+   fetch(`http://localhost:8000/api/user/${param}/`, {
         headers: {
             "Content-Type" : "application/json",
             "Accept" : "application/json",
@@ -39,7 +44,7 @@ function fetchData(param: string, token: string) {
                         // redirect to login
                         return false
                     }
-                    fetchData(param, token.token)
+                    useGetData(param, onComplete)
                     return true
 
                 case 200:
@@ -50,26 +55,24 @@ function fetchData(param: string, token: string) {
             }
         })
         .then((data: any) => data ? data.json() : false)
-
-    return data
+        .then((result: any) => onComplete(result) )
 }
 
 
-async function useGetData(resource: string, onSuccess: () => void, onFailed: () => void){
-    const {token, refresh} = getToken()
+// function useGetData(resource: string, onComplete: () => void){
+//     const {token,} = getToken()
 
-    if (!token) {
-        return false
-    }
+//     if (!token) {
+//         return false
+//     }
 
-    let data = {}
+//     let data = {}
 
-    const res: Promise<any> = fetchData(resource, token)
+//     fetchData(resource, token, onComplete)
 
-    res.then((status) => {data = status})
     
-    return data
-} 
+//     return data
+// } 
 
 
 

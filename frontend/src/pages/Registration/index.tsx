@@ -138,15 +138,16 @@ const Registration: FC = () => {
             })
             .then(resData => {
                 if (resData) {
-                    const success = tokenFetcher({username: formStorage.username, password: formStorage.password})
-                
-                    if (success){
+                    const onSuccess = () => {
                         navigate("/dashboard/detail")
                         localStorage.setItem("username", resData["username"])
-                        return
                     }
 
-                    alert("Something wrong!")
+                    const onFailed = () => {
+                        alert("Something wrong!")
+                    }
+                    
+                    tokenFetcher({username: formStorage.username, password: formStorage.password}, onSuccess, onFailed)
                 } 
             })
     }
@@ -168,7 +169,7 @@ const Registration: FC = () => {
                         <FormTitle title="Data diri" />
                         <div className='w-full h-max grid grid-cols-3 gap-x-6 gap-y-8 mt-8' id='personal-data'>
                             <NormalField name="fullName" title="Nama Lengkap" span={2} />
-                            <NormalField name="nik" title="NIK ( Nomer Induk Kependudukan )" />
+                            <NormalField name="nik" title="NIK ( Nomer Induk Kependudukan )" type='number'/>
                             <NormalField name="placeBirth" title="Tempat Lahir" />
                             <OptionField name="gender" title="Jenis Kelamin" items={["Pria", "Wanita"]} />
                             <DateField names={["dateBirth", "monthBirth", "yearBirth"]} title="Tanggal Lahir" />
